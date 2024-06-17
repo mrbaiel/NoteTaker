@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:13.0-alpine
+    restart: always
+    env_file:
+      -src/.env
+
+    volumes:
+      - pg_data_note:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "5432:5432"
+volumes:
+  pg_data_note:
+networks:
+  backend_nw:
+    driver: bridge

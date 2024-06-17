@@ -12,7 +12,7 @@ environ.Env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")  # Не забываем про DEBUG
 ALLOWED_HOSTS = ["*"]
-
+AUTH_USER_MODEL = 'core.User'
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "core",
 ]
 
 # Определение middleware
@@ -34,7 +35,7 @@ MIDDLEWARE = [
 ]
 
 # Определение ROOT_URLCONF
-ROOT_URLCONF = "Note.urls"
+ROOT_URLCONF = "note.urls"
 
 # Определение TEMPLATES
 TEMPLATES = [
@@ -54,7 +55,7 @@ TEMPLATES = [
 ]
 
 # Определение WSGI_APPLICATION
-WSGI_APPLICATION = "Note.wsgi.application"
+WSGI_APPLICATION = "note.wsgi.application"
 
 # Определение DATABASES
 DATABASES = {
