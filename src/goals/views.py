@@ -4,8 +4,9 @@ from rest_framework import permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
-from goals.models import GoalCategory, Goal
-from goals.serializer import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer
+from goals.models import GoalCategory, Goal, GoalComment
+from goals.serializer import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, GoalSerializer, \
+    GoalCommentSerializer, GoalCommentCreateSerializer
 
 
 class GoalCategoryCreateView(CreateAPIView):
@@ -78,3 +79,33 @@ class GoalView(RetrieveUpdateDestroyAPIView):
         return Goal.objects.filter(Q(user_id=self.request.user.id)
                                    & ~Q(status=Goal.Status.archived)
                                    )
+
+
+class GoalCommentCreateView(CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GoalCommentCreateSerializer
+
+
+class GoalCommentListView(ListAPIView):
+    model = GoalComment
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GoalCommentSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['goal']
+    ordering = [
+        "-created"]  # Устанавливает порядок сортировки результатов запроса по убыванию времени создания комментария
+
+    def get_queryset(self):
+        return GoalComment.objects.filter(user_id=self.request.user.id)
+
+
+class GoalCommentView(RetrieveUpdateDestroyAPIView):
+    model = GoalComment
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GoalCommentSerializer
+
+    def get_queryset(self):
+        return GoalComment.object.filter(
+            Q(user_id = self.request.user.id)
+            & ~ Q(status=Goal.Status.archived)
+        )
